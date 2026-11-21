@@ -101,7 +101,31 @@ def make_stim_circuit(
     stim.Circuit
     """
 
-    return
+    if distance < 3 or distance % 2 == 0:
+        raise ValueError("should be superiror or equal to 3")
+
+    if rounds < 1:
+        raise ValueError("should be superior or equal to 1")
+
+    if basis not in ("Z", "X"):
+        raise ValueError("basis should be 'Z' or 'X'")
+
+    circ = stim.Circuit.generated(
+          f"surface_code:rotated_memory_{basis.lower()}",
+          distance=distance,
+          rounds=rounds,
+          **noise,
+      )
+
+    if not no_reset:
+      noise["after_reset_flip_probability"] = 0.0
+      return circ
+
+
+      
+    
+
+    return circ
 
 def get_circuit_info(circuit: stim.Circuit) -> dict:
     """
